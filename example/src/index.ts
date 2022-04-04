@@ -12,7 +12,6 @@ logger.info('global info');
 logger.warn('global warn');
 logger.error('global error');
 
-logger.isDebug = true;
 
 loggerTest.debug('test debug');
 loggerTest.info('test info');

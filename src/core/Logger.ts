@@ -122,12 +122,6 @@ export class Logger {
     return Logger.#isDebug;
   }
 
-  // 修改实例的isDebug将影响全局isDebug
-  // eslint-disable-next-line class-methods-use-this
-  set isDebug(value: boolean) {
-    Logger.#isDebug = value;
-  }
-
 
   /**
    * 构造方法
