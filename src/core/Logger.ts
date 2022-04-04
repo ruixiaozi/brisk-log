@@ -14,22 +14,22 @@ import TransportStream from 'winston-transport';
 export class Logger {
 
   // 日志实例（单例）
-  private static instances: Map<symbol, Logger> = new Map<symbol, Logger>();
+  static #instances: Map<symbol, Logger> = new Map<symbol, Logger>();
 
-  // 必须要开启debug，debug才有效
-  public static isDebug = false;
+  // 必须要开启debug，debug才有效, 默认关闭
+  static #isDebug = false;
 
   // 自定义日志格式
-  private static customFormat = {
+  static #customFormat = {
     time: format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
     align: format.align(),
     color: format.colorize(),
   };
 
-  private static formatFnc = (logMsg: LogMsg) => `[${logMsg.level}]: ${logMsg.timeStr} [${logMsg.region}]${logMsg.message}`;
+  static #formatFnc = (logMsg: LogMsg) => `[${logMsg.level}]: ${logMsg.timeStr} [${logMsg.region}]${logMsg.message}`;
 
   // 自定义日志配置, 不配置则只有console
-  private static customCofing: TransportStream[] = [
+  static #customCofing: TransportStream[] = [
     new transports.Console({
       level: 'info',
     }),
@@ -44,31 +44,31 @@ export class Logger {
     const _region = region || Symbol('global');
     const option = {
       format: format.combine(
-        ...Object.values(Logger.customFormat),
-        format.printf((info) => Logger.formatFnc({
+        ...Object.values(Logger.#customFormat),
+        format.printf((info) => Logger.#formatFnc({
           level: info.level,
           message: info.message,
           timeStr: info.timestamp,
-          region: _region.toString(),
+          region: _region.description,
         })),
       ),
-      transports: Logger.customCofing,
+      transports: Logger.#customCofing,
     };
-    let instance = Logger.instances.get(_region);
+    let instance = Logger.#instances.get(_region);
     if (instance) {
-      instance.configure(option);
+      instance.#configure(option);
     } else {
       instance = new Logger(option);
-      Logger.instances.set(_region, instance);
+      Logger.#instances.set(_region, instance);
     }
-    instance.region = _region.toString();
+    instance.#region = _region.toString();
     return instance;
   }
 
   public static config(option: LoggerOption) {
-    Logger.formatFnc = option.formatFnc;
+    Logger.#formatFnc = option.formatFnc;
     if (option.isMultiFile) {
-      Logger.customCofing = option.fileConfigs.map((config) => new transports.DailyRotateFile({
+      Logger.#customCofing = option.fileConfigs.map((config) => new transports.DailyRotateFile({
         level: config.level,
         filename: config.path,
         datePattern: config.datePattern ?? 'YYYY-MM-DD',
@@ -80,56 +80,69 @@ export class Logger {
         maxFiles: config.maxFiles ?? '30d',
       }));
     } else {
-      Logger.customCofing = option.fileConfigs.map((config) => new transports.File({
+      Logger.#customCofing = option.fileConfigs.map((config) => new transports.File({
         level: config.level,
         filename: config.path,
       }));
     }
 
     if (option.consoleConfig.enable) {
-      Logger.customCofing.push(new transports.Console({
+      Logger.#customCofing.push(new transports.Console({
         level: option.consoleConfig.level,
       }));
     }
 
-    // 默认关闭debug
-    Logger.isDebug = option.isDebug || false;
+    if (option.isDebug !== undefined) {
+      Logger.#isDebug = option.isDebug;
+    }
 
-    for (let [, instance] of Logger.instances) {
-      instance.configure({
+    for (let [, instance] of Logger.#instances) {
+      instance.#configure({
         format: format.combine(
-          ...Object.values(Logger.customFormat),
-          format.printf((info) => Logger.formatFnc({
+          ...Object.values(Logger.#customFormat),
+          format.printf((info) => Logger.#formatFnc({
             level: info.level,
             message: info.message,
             timeStr: info.timestamp,
-            region: instance.region,
+            region: instance.#region,
           })),
         ),
-        transports: Logger.customCofing,
+        transports: Logger.#customCofing,
       });
     }
   }
 
   // winston日志实例
-  private logger: _Logger;
+  #logger: _Logger;
 
-  private region?: string;
+  #region?: string;
+
+  // eslint-disable-next-line class-methods-use-this
+  get isDebug(): boolean {
+    return Logger.#isDebug;
+  }
+
+  // 修改实例的isDebug将影响全局isDebug
+  // eslint-disable-next-line class-methods-use-this
+  set isDebug(value: boolean) {
+    Logger.#isDebug = value;
+  }
+
 
   /**
    * 构造方法
    * @param option 日志选项
    */
   constructor(option: LoggerOptions) {
-    this.logger = createLogger(option);
+    this.#logger = createLogger(option);
   }
 
   /**
    * 重新配置
    * @param option 日志选项
    */
-  public configure(option: LoggerOptions) {
-    this.logger.configure(option);
+  #configure(option: LoggerOptions) {
+    this.#logger.configure(option);
   }
 
 
@@ -140,7 +153,7 @@ export class Logger {
    * @returns 日志实例
    */
   public debug(message: string, ...meta: any[]) {
-    Logger.isDebug && this.logger.debug(message, ...meta);
+    Logger.#isDebug && this.#logger.debug(message, ...meta);
     return this;
   }
 
@@ -151,7 +164,7 @@ export class Logger {
    * @returns 日志实例
    */
   public info(message: string, ...meta: any[]) {
-    this.logger.info(message, ...meta);
+    this.#logger.info(message, ...meta);
     return this;
   }
 
@@ -162,7 +175,7 @@ export class Logger {
    * @returns 日志实例
    */
   public warn(message: string, ...meta: any[]) {
-    this.logger.warn(message, ...meta);
+    this.#logger.warn(message, ...meta);
     return this;
   }
 
@@ -173,7 +186,7 @@ export class Logger {
    * @returns 日志实例
    */
   public error(message: string, ...meta: any[]) {
-    this.logger.error(message, ...meta);
+    this.#logger.error(message, ...meta);
     return this;
   }
 
