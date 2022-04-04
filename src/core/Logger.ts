@@ -61,7 +61,7 @@ export class Logger {
       instance = new Logger(option);
       Logger.#instances.set(_region, instance);
     }
-    instance.#region = _region.toString();
+    instance.#region = _region;
     return instance;
   }
 
@@ -104,7 +104,7 @@ export class Logger {
             level: info.level,
             message: info.message,
             timeStr: info.timestamp,
-            region: instance.#region,
+            region: instance.#region?.description || '',
           })),
         ),
         transports: Logger.#customCofing,
@@ -115,7 +115,7 @@ export class Logger {
   // winston日志实例
   #logger: _Logger;
 
-  #region?: string;
+  #region?: symbol;
 
   // eslint-disable-next-line class-methods-use-this
   get isDebug(): boolean {
