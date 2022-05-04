@@ -1,11 +1,10 @@
 # BriskLog
 
+Brisklog 是一个日志工具
+
 <a href="https://www.npmjs.com/package/brisk-log"><img src="https://img.shields.io/npm/v/brisk-log.svg" alt="NPM Version" /></a>
 <a href="https://www.npmjs.com/package/brisk-log"><img src="https://img.shields.io/npm/l/brisk-log.svg" alt="Package License" /></a>
 <a href="https://www.npmjs.com/package/brisk-log"><img src="https://img.shields.io/npm/dm/brisk-log.svg" alt="NPM Downloads" /></a>
-
-
-Brisklog 是一个日志工具
 
 
 # License

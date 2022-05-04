@@ -23,7 +23,6 @@ export class Logger {
   static #customFormat = {
     time: format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
     align: format.align(),
-    color: format.colorize(),
   };
 
   static #formatFnc = (logMsg: LogMsg) => `[${logMsg.level}]: ${logMsg.timeStr} [${logMsg.region}]${logMsg.message}`;
