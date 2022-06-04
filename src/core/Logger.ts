@@ -145,8 +145,8 @@ export class Logger {
    * @param meta 其他元素
    * @returns 日志实例
    */
-  public debug(message: string, ...meta: any[]) {
-    Logger.#isDebug && this.#logger.debug(message, ...meta);
+  public debug(message: string, ...meta: any[]): Logger {
+    Logger.#isDebug && this.#logger.debug(this._formatMessage(message, meta));
     return this;
   }
 
@@ -156,8 +156,8 @@ export class Logger {
    * @param meta 其他元素
    * @returns 日志实例
    */
-  public info(message: string, ...meta: any[]) {
-    this.#logger.info(message, ...meta);
+  public info(message: string, ...meta: any[]): Logger {
+    this.#logger.info(this._formatMessage(message, meta));
     return this;
   }
 
@@ -167,8 +167,8 @@ export class Logger {
    * @param meta 其他元素
    * @returns 日志实例
    */
-  public warn(message: string, ...meta: any[]) {
-    this.#logger.warn(message, ...meta);
+  public warn(message: string, ...meta: any[]): Logger {
+    this.#logger.warn(this._formatMessage(message, meta));
     return this;
   }
 
@@ -178,9 +178,14 @@ export class Logger {
    * @param meta 其他元素
    * @returns 日志实例
    */
-  public error(message: string, ...meta: any[]) {
-    this.#logger.error(message, ...meta);
+  public error(message: string, ...meta: any[]): Logger {
+    this.#logger.error(this._formatMessage(message, meta));
     return this;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private _formatMessage(message: string, meta: any[] = []): string {
+    return meta.length > 0 ? `${message}\n${JSON.stringify(meta, undefined, 2)}` : message;
   }
 
 }

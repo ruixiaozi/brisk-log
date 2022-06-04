@@ -1,6 +1,6 @@
 {
   "name": "brisk-log",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "brisk logger",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -21,9 +21,11 @@
   },
   "homepage": "https://github.com/ruixiaozi/brisk-log#readme",
   "dependencies": {
-    "brisk-ts-extends": "1.1.0",
     "winston": "3.6.0",
     "winston-daily-rotate-file": "4.6.1"
+  },
+  "peerDependencies": {
+    "brisk-ts-extends": "1.1.2"
   },
   "devDependencies": {
     "dirlint": "1.0.1",
