@@ -29,7 +29,7 @@ export interface LoggerOption {
   filePath?: string;
   // 文件最大尺寸，默认20m
   fileMaxSize?: string;
-  // 文件最大保留实际，默认30d
+  // 文件最大保留时间，默认30d
   fileMaxDate?: string;
 }
 
@@ -75,7 +75,7 @@ const defaultConfig: LoggerOptionActual = {
  * @param namespace
  * @returns
  */
-export function getConfiguration(namespace: symbol): LoggerOptionActual {
+export function getConfiguration(namespace: symbol = globalNamespaceSymbol): LoggerOptionActual {
   let config = namespaceConfig[namespace];
   if (config) {
     return config;
@@ -264,10 +264,10 @@ export function getLogger(region: symbol = globalRegionSymbol, namespace: symbol
 
 /**
  * 配置全局命名空间的日志选项
- * @param namespace
  * @param option
+ * @param namespace
  */
-export function configure(namespace: symbol, option: LoggerOption) {
+export function configure(option: LoggerOption, namespace: symbol = globalNamespaceSymbol) {
   const config = getConfiguration(namespace);
   Object.entries(option).forEach(([key, value]) => {
     if (value) {
