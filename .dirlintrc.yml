@@ -40,4 +40,5 @@ exceptions:
   - /test
   - /coverage
   - /logs
+  - /*.tgz
 
