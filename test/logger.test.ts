@@ -177,10 +177,10 @@ describe('logger', () => {
     logger.info('info', 'test', 'test1');
     logger.warn('warn', 'test', { a: 1 });
     logger.error('error', 123);
-    expect(winstonLogger.debug).toHaveBeenCalledWith(`debug\n[\n  "test"\n]`);
-    expect(winstonLogger.info).toHaveBeenCalledWith(`info\n[\n  "test",\n  "test1"\n]`);
-    expect(winstonLogger.warn).toHaveBeenCalledWith(`warn\n[\n  "test",\n  {\n    "a": 1\n  }\n]`);
-    expect(winstonLogger.error).toHaveBeenCalledWith(`error\n[\n  123\n]`);
+    expect(winstonLogger.debug).toHaveBeenCalledWith(`debug\n'test'`);
+    expect(winstonLogger.info).toHaveBeenCalledWith(`info\n'test'\n'test1'`);
+    expect(winstonLogger.warn).toHaveBeenCalledWith(`warn\n'test'\n{ a: 1 }`);
+    expect(winstonLogger.error).toHaveBeenCalledWith(`error\n123`);
   });
 
 

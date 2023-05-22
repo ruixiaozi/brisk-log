@@ -1,6 +1,7 @@
 import { createLogger, format, transports, Logger as _Logger } from 'winston';
 import 'winston-daily-rotate-file';
 import * as path from 'path';
+import util from 'util';
 
 export enum LOGGER_LEVEL_E {
   debug = 0,
@@ -228,7 +229,15 @@ class LoggerImpl implements Logger {
   }
 
   private _formatMessage(message: string, meta: any[] = []): string {
-    return meta.length > 0 ? `${message}\n${JSON.stringify(meta, undefined, 2)}` : message;
+    return meta.length > 0
+      ? `${message}\n${meta.map((item) => util.inspect(item, {
+        showHidden: true,
+        depth: null,
+        showProxy: true,
+        maxArrayLength: null,
+        maxStringLength: null,
+      })).join('\n')}`
+      : message;
   }
 
 }
