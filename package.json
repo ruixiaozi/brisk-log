@@ -1,6 +1,6 @@
 {
   "name": "brisk-log",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "brisk logger",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/ruixiaozi/brisk-log#readme",
   "dependencies": {
-    "brisk-ts-extends": "0.0.5",
+    "brisk-ts-extends": "0.0.6",
     "winston": "3.6.0",
     "winston-daily-rotate-file": "4.6.1"
   },
