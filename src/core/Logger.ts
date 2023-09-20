@@ -59,7 +59,16 @@ const globalNamespaceSymbol = Symbol('global');
 
 const globalRegionSymbol = Symbol('global');
 
-const namespaceConfig: { [key: symbol]: LoggerOptionActual } = {};
+// 保存运行时配置信息
+const globalVal: {
+  _briskLogNamespaceConfig?: { [key: symbol]: LoggerOptionActual },
+  [key: string | symbol | number]: any,
+} = globalThis;
+
+if (!globalVal._briskLogNamespaceConfig) {
+  globalVal._briskLogNamespaceConfig = {};
+}
+
 
 const defaultConfig: LoggerOptionActual = {
   level: LOGGER_LEVEL_E.debug,
@@ -77,12 +86,12 @@ const defaultConfig: LoggerOptionActual = {
  * @returns
  */
 export function getConfiguration(namespace: symbol = globalNamespaceSymbol): LoggerOptionActual {
-  let config = namespaceConfig[namespace];
+  let config = globalVal._briskLogNamespaceConfig![namespace];
   if (config) {
     return config;
   }
   config = { ...defaultConfig };
-  namespaceConfig[namespace] = config;
+  globalVal._briskLogNamespaceConfig![namespace] = config;
   return config;
 }
 
